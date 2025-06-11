@@ -1,0 +1,193 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %} - {{ site_settings.site_title|default:"2M ISTANBUL ELEKTRONİK" }}</title>
+    <meta name="description" content="{% block meta_description %}{{ site_settings.site_description|default:'Para sayma makineleri ve çözümleri için güvenilir adres' }}{% endblock %}">
+    
+    <!-- Favicon -->
+    {% if site_settings.favicon %}
+        <link rel="icon" href="{{ site_settings.favicon.url }}" type="image/x-icon">
+    {% else %}
+        <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+    {% endif %}
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Ana CSS Dosyası -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=20250118-1905">
+    
+    {% if site_settings.google_analytics %}
+        <!-- Google Analytics -->
+        {{ site_settings.google_analytics|safe }}
+    {% endif %}
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Üst Çubuk -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="contact-info">
+                <span><i class="fas fa-phone"></i> {{ site_settings.phone_primary|default:"+90 123 456 78 90" }}</span>
+                <span><i class="fas fa-envelope"></i> {{ site_settings.email_primary|default:"info@2mistanbul.com" }}</span>
+            </div>
+            <div class="social-icons">
+                {% if site_settings.facebook_url %}<a href="{{ site_settings.facebook_url }}" target="_blank"><i class="fab fa-facebook-f"></i></a>{% endif %}
+                {% if site_settings.twitter_url %}<a href="{{ site_settings.twitter_url }}" target="_blank"><i class="fab fa-twitter"></i></a>{% endif %}
+                {% if site_settings.instagram_url %}<a href="{{ site_settings.instagram_url }}" target="_blank"><i class="fab fa-instagram"></i></a>{% endif %}
+                {% if site_settings.linkedin_url %}<a href="{{ site_settings.linkedin_url }}" target="_blank"><i class="fab fa-linkedin-in"></i></a>{% endif %}
+                {% if site_settings.youtube_url %}<a href="{{ site_settings.youtube_url }}" target="_blank"><i class="fab fa-youtube"></i></a>{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Ana Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <a href="{% url 'website:anasayfa' %}">
+                    {% if site_settings.logo %}
+                        <img src="{{ site_settings.logo.url }}" alt="{{ site_settings.site_title }}" style="max-height: 40px;">
+                    {% else %}
+                        {{ site_settings.site_title|default:"2M ISTANBUL ELEKTRONİK" }}
+                    {% endif %}
+                </a>
+            </div>
+            <nav class="nav-menu">
+                <a href="{% url 'website:anasayfa' %}">Anasayfa</a>
+                <a href="{% url 'website:urunler' %}">Ürünlerimiz</a>
+                <a href="{% url 'website:hakkimizda' %}">Hakkımızda</a>
+                <a href="{% url 'website:blog' %}">Blog</a>
+                <a href="{% url 'website:iletisim' %}">İletişim</a>
+            </nav>
+            <button class="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Django Messages -->
+    {% if messages %}
+        <div class="messages-container" style="position: fixed; top: 70px; right: 20px; z-index: 1000;">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} fade-in" style="background: {% if message.tags == 'success' %}#28a745{% elif message.tags == 'error' %}#dc3545{% else %}#007bff{% endif %}; color: white; padding: 15px; margin-bottom: 10px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    {{ message }}
+                    <button type="button" class="close" onclick="this.parentElement.remove()" style="float: right; background: none; border: none; color: white; font-size: 20px; cursor: pointer;">&times;</button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Ana İçerik -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <!-- Logo ve Açıklama -->
+                <div class="footer-column">
+                    <h3>{{ site_settings.site_title|default:"2M ISTANBUL ELEKTRONİK" }}</h3>
+                    <p style="margin-bottom: 20px;">{{ site_settings.site_description|default:"20 yılı aşkın deneyimimizle para sayma makineleri ve çözümleri konusunda Türkiye'nin lider tedarikçisiyiz." }}</p>
+                    <div class="social-icons" style="display: flex; gap: 15px;">
+                        {% if site_settings.facebook_url %}<a href="{{ site_settings.facebook_url }}" target="_blank"><i class="fab fa-facebook-f"></i></a>{% endif %}
+                        {% if site_settings.twitter_url %}<a href="{{ site_settings.twitter_url }}" target="_blank"><i class="fab fa-twitter"></i></a>{% endif %}
+                        {% if site_settings.instagram_url %}<a href="{{ site_settings.instagram_url }}" target="_blank"><i class="fab fa-instagram"></i></a>{% endif %}
+                        {% if site_settings.linkedin_url %}<a href="{{ site_settings.linkedin_url }}" target="_blank"><i class="fab fa-linkedin-in"></i></a>{% endif %}
+                        {% if site_settings.youtube_url %}<a href="{{ site_settings.youtube_url }}" target="_blank"><i class="fab fa-youtube"></i></a>{% endif %}
+                    </div>
+                </div>
+                
+                <!-- Hızlı Linkler -->
+                <div class="footer-column">
+                    <h3>Hızlı Linkler</h3>
+                    <ul class="footer-links">
+                        <li><a href="{% url 'website:anasayfa' %}">Anasayfa</a></li>
+                        <li><a href="{% url 'website:urunler' %}">Ürünlerimiz</a></li>
+                        <li><a href="{% url 'website:hakkimizda' %}">Hakkımızda</a></li>
+                        <li><a href="{% url 'website:blog' %}">Blog</a></li>
+                        <li><a href="{% url 'website:iletisim' %}">İletişim</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Ürün Kategorileri -->
+                <div class="footer-column">
+                    <h3>Ürün Kategorileri</h3>
+                    <ul class="footer-links">
+                        {% for category in product_categories %}
+                            <li><a href="{% url 'website:urunler' %}?category={{ category.slug }}">{{ category.name }}</a></li>
+                        {% empty %}
+                            <li><a href="{% url 'website:urunler' %}">Para Sayma Makineleri</a></li>
+                            <li><a href="{% url 'website:urunler' %}">Sahte Para Dedektörleri</a></li>
+                            <li><a href="{% url 'website:urunler' %}">Para Ayıklama Makineleri</a></li>
+                            <li><a href="{% url 'website:urunler' %}">POS Sistemleri</a></li>
+                        {% endfor %}
+                        <li><a href="{% url 'website:iletisim' %}">Yedek Parçalar</a></li>
+                    </ul>
+                </div>
+                
+                <!-- İletişim Bilgileri -->
+                <div class="footer-column">
+                    <h3>İletişim</h3>
+                    <ul class="footer-links" style="list-style: none;">
+                        <li style="display: flex; align-items: flex-start; gap: 10px; margin-bottom: 15px;">
+                            <i class="fas fa-map-marker-alt" style="margin-top: 5px;"></i>
+                            <span>{{ site_settings.address|default:"Merkez Mah. Atatürk Cad. No:123 Kat:5, İstanbul" }}</span>
+                        </li>
+                        <li style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                            <i class="fas fa-phone"></i>
+                            <span>{{ site_settings.phone_primary|default:"+90 123 456 78 90" }}</span>
+                        </li>
+                        <li style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                            <i class="fas fa-envelope"></i>
+                            <span>{{ site_settings.email_primary|default:"info@2mistanbul.com" }}</span>
+                        </li>
+                        <li style="display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-clock"></i>
+                            <span>{{ site_settings.working_hours_weekday|default:"Pzt-Cum: 09:00-18:00" }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="container">
+                    <p>&copy; 2025 {{ site_settings.site_title|default:"2M ISTANBUL ELEKTRONİK" }}. Tüm hakları saklıdır.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="{% static 'js/main.js' %}"></script>
+    
+    <!-- Messages auto-hide -->
+    <script>
+        // Django mesajlarını 5 saniye sonra otomatik gizle
+        setTimeout(function() {
+            const messages = document.querySelectorAll('.messages-container .alert');
+            messages.forEach(function(message) {
+                message.style.transition = 'opacity 0.5s';
+                message.style.opacity = '0';
+                setTimeout(function() {
+                    message.remove();
+                }, 500);
+            });
+        }, 5000);
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html> 

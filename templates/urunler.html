@@ -1,0 +1,404 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if selected_category %}{{ selected_category.name }}{% else %}Ürünlerimiz{% endif %}{% endblock %}
+
+{% block content %}
+<!-- Ürünler Content -->
+<section class="products-section">
+    <div class="container">
+        <div class="products-grid">
+            <!-- Sol Taraf - Ürünler -->
+            <div class="products-content">
+                {% if products %}
+                    <div class="products-list">
+                        {% for product in products %}
+                            <div class="product-card">
+                                <div class="product-image">
+                                    {% if product.image %}
+                                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                                    {% else %}
+                                        <div class="no-image">
+                                            <i class="fas fa-box"></i>
+                                        </div>
+                                    {% endif %}
+                                    {% if not product.in_stock %}
+                                        <div class="stock-badge">Stokta Yok</div>
+                                    {% endif %}
+                                </div>
+                                <div class="product-info">
+                                    <h3>{{ product.name }}</h3>
+                                    <p class="product-category">{{ product.category.name }}</p>
+                                    <p class="product-description">{{ product.short_description }}</p>
+                                    
+                                    {% if product.features %}
+                                        <div class="product-features">
+                                            <h4>Özellikler:</h4>
+                                            <ul>
+                                                {% for line in product.features.splitlines %}
+                                                    {% if line.strip %}
+                                                        <li>{{ line }}</li>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <div class="product-footer">
+                                        {% if product.price %}
+                                            <div class="product-price">{{ product.price|floatformat:0 }} ₺</div>
+                                        {% endif %}
+                                        <a href="{% url 'website:iletisim' %}" class="btn-contact">İletişime Geç</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="no-products">
+                        <i class="fas fa-box-open"></i>
+                        <h3>{% if selected_category %}Bu kategoride ürün bulunmuyor{% else %}Henüz ürün eklenmemiş{% endif %}</h3>
+                        <p>Admin panelinden yeni ürünler ekleyebilirsiniz.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Sağ Taraf - Sidebar -->
+            <div class="products-sidebar">
+                <!-- Kategoriler -->
+                {% if categories %}
+                    <div class="sidebar-widget">
+                        <h4>Ürün Kategorileri</h4>
+                        <ul class="category-list">
+                            <li><a href="{% url 'website:urunler' %}" {% if not selected_category %}class="active"{% endif %}>Tüm Ürünler <span>({{ products.count }})</span></a></li>
+                            {% for category in categories %}
+                                <li><a href="{% url 'website:urunler' %}?category={{ category.slug }}" {% if selected_category and selected_category.id == category.id %}class="active"{% endif %}>{{ category.name }} <span>({{ category.get_product_count }})</span></a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <!-- İletişim Widget -->
+                <div class="sidebar-widget contact-widget">
+                    <h4>Ürün Danışmanlığı</h4>
+                    <p>Size en uygun ürünü seçmeniz için uzman ekibimiz yanınızda.</p>
+                    {% if site_settings %}
+                        <div class="contact-info">
+                            <p><i class="fas fa-phone"></i> {{ site_settings.phone }}</p>
+                            <p><i class="fas fa-envelope"></i> {{ site_settings.email }}</p>
+                        </div>
+                    {% endif %}
+                    <a href="{% url 'website:iletisim' %}" class="btn-contact-widget">
+                        <i class="fas fa-comments"></i> Ücretsiz Danışmanlık
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.products-section {
+    padding: 60px 0;
+    background: #D3D3D3;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 40px;
+}
+
+.products-list {
+    display: grid;
+    gap: 30px;
+}
+
+.product-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    min-height: 250px;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-image {
+    position: relative;
+    height: 250px;
+    overflow: hidden;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.no-image {
+    height: 100%;
+    background: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    font-size: 3rem;
+}
+
+.stock-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #A91E23;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.product-info {
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-info h3 {
+    color: #0A2815;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.product-category {
+    color: #D4AF37;
+    font-weight: 500;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
+
+.product-description {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+.product-features {
+    margin-bottom: 20px;
+}
+
+.product-features h4 {
+    color: #0A2815;
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.product-features ul {
+    list-style: none;
+    padding: 0;
+}
+
+.product-features li {
+    padding: 5px 0;
+    padding-left: 15px;
+    position: relative;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.product-features li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #28a745;
+    font-weight: bold;
+}
+
+.product-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+.product-price {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #0A2815;
+}
+
+.btn-contact {
+    background: #D4AF37;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.3s ease;
+}
+
+.btn-contact:hover {
+    background: #B8941F;
+    color: white;
+}
+
+.products-sidebar {
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+}
+
+.sidebar-widget {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.sidebar-widget h4 {
+    color: #0A2815;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.category-list {
+    list-style: none;
+    padding: 0;
+}
+
+.category-list li {
+    margin-bottom: 10px;
+}
+
+.category-list a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #555;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.category-list a:hover,
+.category-list a.active {
+    background: #0A2815;
+    color: white;
+}
+
+.category-list span {
+    font-size: 0.8rem;
+    background: #e9ecef;
+    padding: 2px 8px;
+    border-radius: 10px;
+    color: #666;
+}
+
+.category-list a.active span,
+.category-list a:hover span {
+    background: rgba(255,255,255,0.2);
+    color: white;
+}
+
+.contact-widget {
+    background: linear-gradient(135deg, #0A2815 0%, #1a4a26 100%);
+    color: white;
+}
+
+.contact-widget h4 {
+    color: white;
+}
+
+.contact-widget p {
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+
+.contact-info p {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+.btn-contact-widget {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #D4AF37;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.3s ease;
+    margin-top: 15px;
+}
+
+.btn-contact-widget:hover {
+    background: #B8941F;
+    color: white;
+}
+
+.no-products {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+}
+
+.no-products i {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    color: #ccc;
+}
+
+.no-products h3 {
+    margin-bottom: 10px;
+    color: #555;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .products-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .product-card {
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+    
+    .product-image {
+        height: 200px;
+    }
+    
+    .products-sidebar {
+        position: static;
+    }
+    
+    .sidebar-widget {
+        margin-bottom: 20px;
+    }
+}
+
+/* Main Content */
+.products-page {
+    background: #D3D3D3;
+    min-height: 100vh;
+    padding: 40px 0;
+}
+</style>
+{% endblock %} 

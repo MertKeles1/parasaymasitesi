@@ -1,0 +1,439 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Blog{% endblock %}
+
+{% block content %}
+<!-- Blog Content -->
+<section class="blog-section">
+    <div class="container">
+        <div class="blog-grid">
+            <!-- Sol Taraf - Blog Yazıları -->
+            <div class="blog-posts">
+                {% if page_obj %}
+                    {% for post in page_obj %}
+                        <article class="blog-card">
+                            <div class="blog-image">
+                                {% if post.featured_image %}
+                                    <img src="{{ post.featured_image.url }}" alt="{{ post.title }}">
+                                {% else %}
+                                    <div class="no-image">
+                                        <i class="fas fa-image"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="blog-content">
+                                <div class="blog-meta">
+                                    <span><i class="fas fa-calendar"></i> {{ post.published_date|date:"d M Y" }}</span>
+                                    <span><i class="fas fa-user"></i> {{ post.author.first_name|default:post.author.username }}</span>
+                                    <span><i class="fas fa-folder"></i> {{ post.category.name }}</span>
+                                    <span><i class="fas fa-eye"></i> {{ post.view_count }} görüntülenme</span>
+                                </div>
+                                <h3><a href="{% url 'website:blog_detail' post.slug %}">{{ post.title }}</a></h3>
+                                <p>{{ post.excerpt }}</p>
+                                <a href="{% url 'website:blog_detail' post.slug %}" class="read-more">Devamını Oku <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </article>
+                    {% endfor %}
+
+                    <!-- Sayfalama -->
+                    {% if page_obj.has_other_pages %}
+                        <div class="pagination">
+                            {% if page_obj.has_previous %}
+                                <a href="?page=1{% if selected_category %}&category={{ selected_category.slug }}{% endif %}" class="page-link">&laquo; İlk</a>
+                                <a href="?page={{ page_obj.previous_page_number }}{% if selected_category %}&category={{ selected_category.slug }}{% endif %}" class="page-link">Önceki</a>
+                            {% endif %}
+
+                            {% for num in page_obj.paginator.page_range %}
+                                {% if page_obj.number == num %}
+                                    <span class="page-link current">{{ num }}</span>
+                                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                    <a href="?page={{ num }}{% if selected_category %}&category={{ selected_category.slug }}{% endif %}" class="page-link">{{ num }}</a>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if page_obj.has_next %}
+                                <a href="?page={{ page_obj.next_page_number }}{% if selected_category %}&category={{ selected_category.slug }}{% endif %}" class="page-link">Sonraki</a>
+                                <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_category %}&category={{ selected_category.slug }}{% endif %}" class="page-link">Son &raquo;</a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="no-posts">
+                        <i class="fas fa-edit"></i>
+                        <h3>Henüz blog yazısı bulunmuyor</h3>
+                        <p>Admin panelinden yeni blog yazıları ekleyebilirsiniz.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Sağ Taraf - Sidebar -->
+            <div class="blog-sidebar">
+                <!-- Kategoriler -->
+                {% if blog_categories %}
+                    <div class="sidebar-widget">
+                        <h4>Kategoriler</h4>
+                        <ul class="category-list">
+                            <li><a href="{% url 'website:blog' %}" {% if not selected_category %}class="active"{% endif %}>Tüm Yazılar <span>({{ page_obj.paginator.count }})</span></a></li>
+                            {% for category in blog_categories %}
+                                <li><a href="{% url 'website:blog' %}?category={{ category.slug }}" {% if selected_category and selected_category.id == category.id %}class="active"{% endif %}>{{ category.name }} <span>({{ category.get_post_count }})</span></a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <!-- Bülten Aboneliği -->
+                <div class="sidebar-widget newsletter-widget">
+                    <h4>Bülten Aboneliği</h4>
+                    <p>En yeni yazılarımızdan haberdar olmak için e-posta adresinizi girin.</p>
+                    <form id="newsletter-form" class="newsletter-form">
+                        <input type="email" id="newsletter-email" placeholder="E-posta adresiniz" required>
+                        <button type="submit">
+                            <i class="fas fa-paper-plane"></i> Abone Ol
+                        </button>
+                    </form>
+                    <div id="newsletter-message" style="display: none; margin-top: 10px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.blog-section {
+    padding: 60px 0;
+    background: #D3D3D3;
+}
+
+.blog-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 40px;
+}
+
+.blog-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    transition: transform 0.3s ease;
+}
+
+.blog-card:hover {
+    transform: translateY(-5px);
+}
+
+.blog-image {
+    height: 250px;
+    overflow: hidden;
+}
+
+.blog-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.no-image {
+    height: 100%;
+    background: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    font-size: 3rem;
+}
+
+.blog-content {
+    padding: 25px;
+}
+
+.blog-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.blog-meta span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.blog-content h3 {
+    margin-bottom: 15px;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.blog-content h3 a {
+    color: #0A2815;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.blog-content h3 a:hover {
+    color: #D4AF37;
+}
+
+.blog-content p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.read-more {
+    color: #D4AF37;
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.3s ease;
+}
+
+.read-more:hover {
+    color: #B8941F;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+}
+
+.page-link {
+    padding: 10px 15px;
+    background: white;
+    color: #0A2815;
+    text-decoration: none;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    transition: all 0.3s ease;
+}
+
+.page-link:hover,
+.page-link.current {
+    background: #0A2815;
+    color: white;
+    border-color: #0A2815;
+}
+
+.blog-sidebar {
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+}
+
+.sidebar-widget {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.sidebar-widget h4 {
+    color: #0A2815;
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.category-list {
+    list-style: none;
+    padding: 0;
+}
+
+.category-list li {
+    margin-bottom: 10px;
+}
+
+.category-list a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #555;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.category-list a:hover,
+.category-list a.active {
+    background: #0A2815;
+    color: white;
+}
+
+.category-list span {
+    font-size: 0.8rem;
+    background: #e9ecef;
+    padding: 2px 8px;
+    border-radius: 10px;
+    color: #666;
+}
+
+.category-list a.active span,
+.category-list a:hover span {
+    background: rgba(255,255,255,0.2);
+    color: white;
+}
+
+.newsletter-widget {
+    background: linear-gradient(135deg, #0A2815 0%, #1a4a26 100%);
+    color: white;
+}
+
+.newsletter-widget h4 {
+    color: white;
+}
+
+.newsletter-widget p {
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+
+.newsletter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.newsletter-form input {
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    background: rgba(255,255,255,0.1);
+    color: white;
+    placeholder-color: rgba(255,255,255,0.7);
+}
+
+.newsletter-form input::placeholder {
+    color: rgba(255,255,255,0.7);
+}
+
+.newsletter-form button {
+    padding: 12px;
+    background: #D4AF37;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.newsletter-form button:hover {
+    background: #B8941F;
+}
+
+.no-posts {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+}
+
+.no-posts i {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    color: #ccc;
+}
+
+.no-posts h3 {
+    margin-bottom: 10px;
+    color: #555;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .blog-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .blog-image {
+        height: 200px;
+    }
+    
+    .blog-meta {
+        gap: 10px;
+        font-size: 0.8rem;
+    }
+    
+    .blog-content h3 {
+        font-size: 1.2rem;
+    }
+    
+    .blog-sidebar {
+        position: static;
+    }
+    
+    .sidebar-widget {
+        margin-bottom: 20px;
+    }
+    
+    .pagination {
+        gap: 5px;
+    }
+    
+    .page-link {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Blog Page */
+.blog-page {
+    background: #D3D3D3;
+    min-height: 100vh;
+    padding: 40px 0;
+}
+</style>
+
+<script>
+// Bülten aboneliği formu
+document.getElementById('newsletter-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const email = document.getElementById('newsletter-email').value;
+    const messageDiv = document.getElementById('newsletter-message');
+    
+    fetch('{% url "website:newsletter_subscribe" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ email: email })
+    })
+    .then(response => response.json())
+    .then(data => {
+        messageDiv.style.display = 'block';
+        if (data.success) {
+            messageDiv.style.color = '#28a745';
+            messageDiv.textContent = data.message;
+            document.getElementById('newsletter-email').value = '';
+        } else {
+            messageDiv.style.color = '#dc3545';
+            messageDiv.textContent = data.message;
+        }
+    })
+    .catch(error => {
+        messageDiv.style.display = 'block';
+        messageDiv.style.color = '#dc3545';
+        messageDiv.textContent = 'Bir hata oluştu. Lütfen tekrar deneyin.';
+    });
+});
+</script>
+{% endblock %} 

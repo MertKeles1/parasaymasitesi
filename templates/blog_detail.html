@@ -1,0 +1,286 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ blog_post.title }}{% endblock %}
+{% block meta_description %}{{ blog_post.meta_description|default:blog_post.excerpt }}{% endblock %}
+
+{% block content %}
+<!-- Blog Header -->
+<section class="page-header">
+    <div class="container">
+        <h1>{{ blog_post.title }}</h1>
+        <nav>
+            <a href="{% url 'website:anasayfa' %}">Anasayfa</a> > 
+            <a href="{% url 'website:blog' %}">Blog</a> > 
+            <span>{{ blog_post.title|truncatechars:50 }}</span>
+        </nav>
+    </div>
+</section>
+
+<!-- Blog Content -->
+<section class="blog-detail-section">
+    <div class="container">
+        <div class="blog-detail-grid">
+            <!-- Ana İçerik -->
+            <article class="blog-detail-content">
+                <!-- Blog Meta -->
+                <div class="blog-meta">
+                    <span><i class="fas fa-calendar"></i> {{ blog_post.published_date|date:"d M Y" }}</span>
+                    <span><i class="fas fa-user"></i> {{ blog_post.author.first_name|default:blog_post.author.username }}</span>
+                    <span><i class="fas fa-folder"></i> {{ blog_post.category.name }}</span>
+                    <span><i class="fas fa-eye"></i> {{ blog_post.view_count }} görüntülenme</span>
+                </div>
+
+                <!-- Öne Çıkan Resim -->
+                {% if blog_post.featured_image %}
+                    <div class="featured-image">
+                        <img src="{{ blog_post.featured_image.url }}" alt="{{ blog_post.title }}">
+                    </div>
+                {% endif %}
+
+                <!-- Blog İçeriği -->
+                <div class="blog-text">
+                    {{ blog_post.content|linebreaks }}
+                </div>
+
+                <!-- Geri Dön Butonu -->
+                <div class="back-to-blog">
+                    <a href="{% url 'website:blog' %}" class="btn-back">
+                        <i class="fas fa-arrow-left"></i> Blog'a Geri Dön
+                    </a>
+                </div>
+            </article>
+
+            <!-- Sidebar -->
+            <div class="blog-sidebar">
+                <!-- İlgili Yazılar -->
+                {% if related_posts %}
+                    <div class="sidebar-widget">
+                        <h4>İlgili Yazılar</h4>
+                        <div class="related-posts">
+                            {% for post in related_posts %}
+                                <div class="related-post">
+                                    <h5><a href="{% url 'website:blog_detail' post.slug %}">{{ post.title }}</a></h5>
+                                    <span class="post-date">{{ post.published_date|date:"d M Y" }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Blog Kategorileri -->
+                {% if blog_categories %}
+                    <div class="sidebar-widget">
+                        <h4>Kategoriler</h4>
+                        <ul class="category-list">
+                            {% for category in blog_categories %}
+                                <li><a href="{% url 'website:blog' %}">{{ category.name }} <span>({{ category.get_post_count }})</span></a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.page-header {
+    background: linear-gradient(135deg, #0A2815 0%, #1a4a26 100%);
+    color: white;
+    padding: 60px 0;
+}
+
+.page-header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.page-header nav a {
+    color: #F5EFD9;
+    text-decoration: none;
+}
+
+.blog-detail-section {
+    padding: 60px 0;
+    background: #f8f9fa;
+}
+
+.blog-detail-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 40px;
+}
+
+.blog-detail-content {
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.blog-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.blog-meta span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.featured-image {
+    margin-bottom: 30px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.featured-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.blog-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #333;
+    margin-bottom: 40px;
+}
+
+.blog-text p {
+    margin-bottom: 20px;
+}
+
+.back-to-blog {
+    border-top: 1px solid #eee;
+    padding-top: 30px;
+}
+
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: #A91E23;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 12px 24px;
+    border: 2px solid #A91E23;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.btn-back:hover {
+    background: #A91E23;
+    color: white;
+}
+
+.blog-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.sidebar-widget {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.sidebar-widget h4 {
+    color: #0A2815;
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+    border-bottom: 2px solid #A91E23;
+    padding-bottom: 10px;
+}
+
+.related-posts .related-post {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.related-posts .related-post:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.related-post h5 {
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+.related-post h5 a {
+    color: #0A2815;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.related-post h5 a:hover {
+    color: #A91E23;
+}
+
+.post-date {
+    color: #999;
+    font-size: 0.9rem;
+}
+
+.category-list {
+    list-style: none;
+}
+
+.category-list li {
+    margin-bottom: 10px;
+}
+
+.category-list a {
+    color: #333;
+    text-decoration: none;
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    transition: color 0.3s ease;
+}
+
+.category-list a:hover {
+    color: #A91E23;
+}
+
+.category-list span {
+    color: #999;
+    font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .blog-detail-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+    
+    .blog-detail-content {
+        padding: 25px;
+    }
+    
+    .blog-meta {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .page-header h1 {
+        font-size: 2rem;
+    }
+}
+</style>
+{% endblock %} 

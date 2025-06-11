@@ -1,0 +1,58 @@
+# Core Django
+Django==5.2.1
+
+# Database (SQLite is default, these are optional)
+# psycopg2-binary==2.9.9  # PostgreSQL adapter (uncomment if needed)
+# mysqlclient==2.2.4      # MySQL adapter (requires system libs)
+
+# API Development
+djangorestframework==3.15.2
+django-cors-headers==4.6.0
+django-filter==24.3
+
+# Authentication & Security
+django-allauth==64.2.1
+djangorestframework-simplejwt==5.3.0
+
+# Media & File Handling
+Pillow==10.4.0
+django-storages==1.14.4
+
+# Forms & Validation
+django-crispy-forms==2.3
+crispy-bootstrap5==2024.2
+
+# Admin & UI Enhancements
+django-admin-interface==0.28.8
+django-import-export==4.1.0
+
+# Performance & Development
+django-debug-toolbar==4.4.6
+django-extensions==3.2.3
+
+# Email & Background Tasks
+celery==5.4.0
+redis==5.1.1
+
+# SEO & Content
+django-meta==2.4.0
+
+# Development Tools
+django-environ==0.11.2
+pytest-django==4.9.0
+
+# Production
+gunicorn==23.0.0
+whitenoise==6.8.2
+
+# Utilities
+python-decouple==3.8
+requests==2.32.3
+python-dateutil==2.9.0
+
+# Additional useful packages
+django-widget-tweaks==1.5.0  # Form widget styling
+django-bootstrap5==24.2       # Bootstrap integration
+django-compressor==4.5.1     # CSS/JS compression
+django-mptt==0.16.0           # Tree structures
+django-taggit==6.1.0          # Tagging system 

@@ -1,0 +1,855 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ site_settings.site_title }}{% endblock %}
+
+{% block content %}
+<!-- Modern Hero Slider -->
+{% if home_sliders %}
+<section class="hero-slider">
+    <div class="slider-container">
+        {% for slider in home_sliders %}
+            <div class="slide {% if forloop.first %}active{% endif %}">
+                {% if slider.image %}
+                    <div class="slide-bg" style="background-image: url('{{ slider.image.url }}');"></div>
+                {% else %}
+                    <div class="slide-bg slide-gradient"></div>
+                {% endif %}
+                <div class="slide-content">
+                    <div class="container">
+                        <div class="slide-text">
+                            <h1>{{ slider.title }}</h1>
+                            <p>{{ slider.description }}</p>
+                            {% if slider.button_text and slider.button_url %}
+                                <a href="{{ slider.button_url }}" class="hero-btn">{{ slider.button_text }}</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Slider Controls -->
+    {% if home_sliders|length > 1 %}
+        <div class="slider-nav">
+            <button class="slider-btn prev-btn">‹</button>
+            <button class="slider-btn next-btn">›</button>
+        </div>
+        
+        <div class="slider-dots">
+            {% for slider in home_sliders %}
+                <button class="dot {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.counter0 }}"></button>
+            {% endfor %}
+        </div>
+    {% endif %}
+</section>
+{% else %}
+<!-- Fallback Hero -->
+<section class="hero-fallback">
+    <div class="container">
+        <h1>{{ site_settings.site_title }}</h1>
+        <p>{{ site_settings.site_description }}</p>
+        <a href="{% url 'website:urunler' %}" class="hero-btn">Ürünlerimizi Keşfedin</a>
+    </div>
+</section>
+{% endif %}
+
+<!-- Öne Çıkan Ürünler -->
+{% if featured_products %}
+<section class="featured-products">
+    <div class="container">
+        <div class="section-header">
+            <h2>Öne Çıkan Ürünlerimiz</h2>
+            <p>En çok tercih edilen ürünlerimizi keşfedin</p>
+        </div>
+        
+        <div class="products-grid">
+            {% for product in featured_products %}
+                <div class="product-card">
+                    <div class="product-image">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        {% else %}
+                            <div class="no-image">
+                                <i class="fas fa-box"></i>
+                            </div>
+                        {% endif %}
+                        {% if product.is_featured %}
+                            <span class="featured-badge">Öne Çıkan</span>
+                        {% endif %}
+                    </div>
+                    <div class="product-info">
+                        <h3>{{ product.name }}</h3>
+                        <p class="product-category">{{ product.category.name }}</p>
+                        <p class="product-description">{{ product.short_description|truncatewords:15 }}</p>
+                        {% if product.price %}
+                            <div class="product-price">{{ product.price|floatformat:0 }} ₺</div>
+                        {% endif %}
+                        <a href="{% url 'website:iletisim' %}" class="product-btn">İletişime Geç</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center">
+            <a href="{% url 'website:urunler' %}" class="view-all-btn">Tüm Ürünleri Görüntüle</a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Şirket Değerleri -->
+<section class="company-features">
+    <div class="container">
+        <div class="section-header">
+            <h2>Neden Bizi Seçmelisiniz?</h2>
+            <p>Sektördeki deneyimimiz ve kaliteli hizmet anlayışımız</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-award"></i>
+                </div>
+                <h3>Yüksek Kalite</h3>
+                <p>En yüksek kalitede, dayanıklı ve uzun ömürlü para sayma makineleri sunuyoruz.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-tools"></i>
+                </div>
+                <h3>Teknik Servis</h3>
+                <p>Tüm Türkiye'de hızlı ve profesyonel teknik servis hizmeti sunuyoruz.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Güvenilirlik</h3>
+                <p>Sahte para tespiti ve güvenlik özellikleri ile işletmenizi koruyoruz.</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h3>7/24 Destek</h3>
+                <p>Uzman ekibimiz her zaman yanınızda, sorunlarınızı çözmek için hazır.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- İstatistikler -->
+<section class="stats-section">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">{{ stats.years_experience|default:"20" }}+</div>
+                <div class="stat-label">Yıllık Deneyim</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ stats.happy_customers|default:"5000" }}+</div>
+                <div class="stat-label">Mutlu Müşteri</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ stats.product_varieties|default:"30" }}+</div>
+                <div class="stat-label">Ürün Çeşidi</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ stats.cities_served|default:"81" }}</div>
+                <div class="stat-label">İlde Hizmet</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Müşteri Testimonials -->
+{% if testimonials %}
+<section class="testimonials">
+    <div class="container">
+        <div class="section-header">
+            <h2>Müşterilerimiz Ne Diyor?</h2>
+            <p>Müşteri memnuniyeti bizim için en önemli öncelik</p>
+        </div>
+        
+        <div class="testimonials-grid">
+            {% for testimonial in testimonials %}
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <div class="stars">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= testimonial.rating %}
+                                    <i class="fas fa-star"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <p>"{{ testimonial.content }}"</p>
+                    </div>
+                    <div class="testimonial-author">
+                        {% if testimonial.photo %}
+                            <img src="{{ testimonial.photo.url }}" alt="{{ testimonial.name }}">
+                        {% else %}
+                            <div class="author-avatar">{{ testimonial.name|first }}</div>
+                        {% endif %}
+                        <div class="author-info">
+                            <h4>{{ testimonial.name }}</h4>
+                            <span>{{ testimonial.position }}</span>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-content">
+            <h2>İşletmeniz İçin En Uygun Çözümü Bulmaya Hazır Mısınız?</h2>
+            <p>Uzman ekibimiz, işletmenizin ihtiyaçlarına göre özel çözümler sunmak için hazır.</p>
+            <div class="cta-buttons">
+                <a href="{% url 'website:iletisim' %}" class="cta-btn primary">Bize Ulaşın</a>
+                <a href="{% url 'website:urunler' %}" class="cta-btn secondary">Ürünleri İnceleyin</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+/* Modern Hero Slider */
+.hero-slider {
+    position: relative;
+    height: 70vh;
+    min-height: 500px;
+    overflow: hidden;
+}
+
+.slider-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    display: flex;
+    align-items: center;
+}
+
+.slide.active {
+    opacity: 1;
+}
+
+.slide-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.slide-gradient {
+    background: linear-gradient(135deg, #0A2815 0%, #1a4a26 50%, #D4AF37 100%);
+}
+
+.slide-bg::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 40, 21, 0.6);
+}
+
+.slide-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+}
+
+.slide-text {
+    max-width: 600px;
+    color: white;
+}
+
+.slide-text h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.slide-text p {
+    font-size: 1.3rem;
+    margin-bottom: 30px;
+    opacity: 0.9;
+    line-height: 1.6;
+}
+
+.hero-btn {
+    display: inline-block;
+    background: #D4AF37;
+    color: white;
+    padding: 15px 30px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.hero-btn:hover {
+    background: #B8941F;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+    color: white;
+}
+
+.slider-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+
+.slider-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.slider-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.slider-dots {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    display: flex;
+    gap: 10px;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dot.active {
+    background: #D4AF37;
+    transform: scale(1.2);
+}
+
+.hero-fallback {
+    background: linear-gradient(135deg, #0A2815 0%, #1a4a26 50%, #D4AF37 100%);
+    color: white;
+    padding: 100px 0;
+    text-align: center;
+}
+
+.hero-fallback h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.hero-fallback p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+/* Sections */
+.featured-products,
+.company-features,
+.testimonials {
+    padding: 80px 0;
+}
+
+.stats-section {
+    background: linear-gradient(135deg, #0A2815 0%, #1a4a26 100%);
+    color: white;
+    padding: 80px 0;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    color: #0A2815;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.section-header p {
+    color: #666;
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Products Grid */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-bottom: 50px;
+}
+
+.product-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.product-image {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image img {
+    transform: scale(1.1);
+}
+
+.no-image {
+    height: 100%;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #adb5bd;
+    font-size: 3rem;
+}
+
+.featured-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #D4AF37;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.product-info {
+    padding: 25px;
+}
+
+.product-info h3 {
+    color: #0A2815;
+    margin-bottom: 8px;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.product-category {
+    color: #D4AF37;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.product-description {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.product-price {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #0A2815;
+    margin-bottom: 15px;
+}
+
+.product-btn {
+    background: #D4AF37;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.product-btn:hover {
+    background: #B8941F;
+    color: white;
+}
+
+/* Features Grid */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+}
+
+.feature-card {
+    text-align: center;
+    padding: 30px 20px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+}
+
+.feature-icon {
+    font-size: 3.5rem;
+    color: #D4AF37;
+    margin-bottom: 20px;
+}
+
+.feature-card h3 {
+    color: #0A2815;
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.feature-card p {
+    color: #666;
+    line-height: 1.6;
+}
+
+/* Stats */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 40px;
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #D4AF37;
+    margin-bottom: 10px;
+}
+
+.stat-label {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* Testimonials */
+.testimonials {
+    background: #D3D3D3;
+}
+
+.testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.testimonial-card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-5px);
+}
+
+.stars {
+    color: #D4AF37;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.testimonial-content p {
+    color: #666;
+    line-height: 1.6;
+    font-style: italic;
+    margin-bottom: 20px;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.testimonial-author img,
+.author-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.author-avatar {
+    background: #0A2815;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.author-info h4 {
+    color: #0A2815;
+    margin-bottom: 5px;
+    font-size: 1rem;
+}
+
+.author-info span {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* CTA Section */
+.cta-section {
+    background: #D3D3D3;
+    padding: 80px 0;
+    text-align: center;
+}
+
+.cta-content h2 {
+    font-size: 2.5rem;
+    color: #0A2815;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.cta-content p {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 40px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+}
+
+.cta-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.cta-btn {
+    padding: 15px 30px;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.cta-btn.primary {
+    background: #D4AF37;
+    color: white;
+}
+
+.cta-btn.primary:hover {
+    background: #B8941F;
+    transform: translateY(-2px);
+    color: white;
+}
+
+.cta-btn.secondary {
+    background: transparent;
+    color: #0A2815;
+    border: 2px solid #0A2815;
+}
+
+.cta-btn.secondary:hover {
+    background: #0A2815;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.view-all-btn {
+    background: #0A2815;
+    color: white;
+    padding: 15px 30px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.view-all-btn:hover {
+    background: #1a4a26;
+    transform: translateY(-2px);
+    color: white;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Company Features Background */
+.company-features {
+    background: #D3D3D3;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .slide-text h1 {
+        font-size: 2.5rem;
+    }
+    
+    .slide-text p {
+        font-size: 1.1rem;
+    }
+    
+    .section-header h2 {
+        font-size: 2rem;
+    }
+    
+    .slider-nav {
+        display: none;
+    }
+    
+    .cta-content h2 {
+        font-size: 2rem;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .testimonials-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+    
+    .stat-number {
+        font-size: 2.5rem;
+    }
+}
+</style>
+
+<script>
+// Slider JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    const nextBtn = document.querySelector('.next-btn');
+    const prevBtn = document.querySelector('.prev-btn');
+    
+    if (slides.length <= 1) return;
+    
+    let currentSlide = 0;
+    
+    function showSlide(index) {
+        // Remove active class from all slides and dots
+        slides.forEach(slide => slide.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+        
+        // Add active class to current slide and dot
+        slides[index].classList.add('active');
+        if (dots[index]) dots[index].classList.add('active');
+    }
+    
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+    }
+    
+    function prevSlide() {
+        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+        showSlide(currentSlide);
+    }
+    
+    // Event listeners
+    if (nextBtn) nextBtn.addEventListener('click', nextSlide);
+    if (prevBtn) prevBtn.addEventListener('click', prevSlide);
+    
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            currentSlide = index;
+            showSlide(currentSlide);
+        });
+    });
+    
+    // Auto slide
+    setInterval(nextSlide, 5000);
+});
+</script>
+{% endblock %} 
