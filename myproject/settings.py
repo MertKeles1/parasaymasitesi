@@ -26,17 +26,19 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-86suc#mt_z*)#&@zcs!9(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+# Railway specific ALLOWED_HOSTS
+ALLOWED_HOSTS = [
+    'web-production-6e57c.up.railway.app',
+    '*.railway.app',
+    '*.up.railway.app',
+    'localhost',
+    '127.0.0.1',
+    '0.0.0.0'
+]
 
-# Add production hosts
-if not DEBUG:
-    ALLOWED_HOSTS.extend([
-        '.railway.app',
-        '.render.com', 
-        '.herokuapp.com',
-        '.pythonanywhere.com',
-        '.vercel.app'
-    ])
+# Parse ALLOWED_HOSTS from environment variable if provided
+if os.environ.get('ALLOWED_HOSTS'):
+    ALLOWED_HOSTS.extend(os.environ.get('ALLOWED_HOSTS').split(','))
 
 
 # Application definition
@@ -158,3 +160,23 @@ if not DEBUG:
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
+
+# Railway specific settings
+if os.environ.get('RAILWAY_ENVIRONMENT'):
+    DEBUG = False
+    ALLOWED_HOSTS = ['*']  # Railway handles the routing
+    
+# Logging configuration for Railway
+if not DEBUG:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+            },
+        },
+        'root': {
+            'handlers': ['console'],
+        },
+    }
