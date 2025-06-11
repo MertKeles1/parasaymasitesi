@@ -6,7 +6,7 @@ Bu klasörde Django web framework'ü kuruldu ve tam özellikli bir web sitesi i�
 
 1. Virtual environment'ı aktifleştir:
 ```bash
-source venv/bin/activate
+source venv_new/bin/activate
 ```
 
 2. Tüm bağımlılıkları kur:
