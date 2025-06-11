@@ -1,100 +1,181 @@
 # Django Web Sitesi Projesi
 
-Bu klasörde Django web framework'ü kuruldu ve tam özellikli bir web sitesi için gerekli paketler eklendi.
+Modern ve profesyonel bir Django web sitesi projesi. İşletme web siteleri için tasarlanmış, tam özellikli ve responsive bir platform.
 
-## Kurulum
+## 🌟 Özellikler
 
-1. Virtual environment'ı aktifleştir:
+- **Modern Tasarım**: Responsive ve kullanıcı dostu arayüz
+- **Çoklu Sayfa Yapısı**: Ana sayfa, Ürünler, Hakkımızda, Blog, İletişim
+- **SEO Optimize**: Arama motoru dostu yapı
+- **Admin Paneli**: Django admin ile kolay içerik yönetimi
+- **API Desteği**: RESTful API endpoints
+- **Medya Yönetimi**: Resim ve dosya yükleme sistemi
+
+## 🚀 Canlı Demo
+
+Website şu anda geliştirme aşamasında. Yerel sunucuda çalıştırarak test edebilirsiniz.
+
+## 📋 Gereksinimler
+
+- Python 3.8+
+- Django 5.2.1
+- Virtual Environment
+- SQLite (geliştirme için) / PostgreSQL (production için)
+
+## 🛠️ Kurulum
+
+1. **Projeyi klonlayın:**
 ```bash
-source venv/bin/activate
+git clone https://github.com/USERNAME/REPOSITORY-NAME.git
+cd 2MPROJE
 ```
 
-2. Tüm bağımlılıkları kur:
+2. **Virtual environment oluşturun ve aktifleştirin:**
+```bash
+python -m venv venv_new
+source venv_new/bin/activate  # Linux/Mac
+# veya
+venv_new\Scripts\activate     # Windows
+```
+
+3. **Gerekli paketleri kurun:**
 ```bash
 pip install -r requirements.txt
 ```
 
-## Kullanım
+4. **Veritabanı migration'larını çalıştırın:**
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
 
-1. Geliştirme sunucusunu başlat:
+5. **Süper kullanıcı oluşturun:**
+```bash
+python manage.py createsuperuser
+```
+
+6. **Statik dosyaları toplayın:**
+```bash
+python manage.py collectstatic
+```
+
+7. **Geliştirme sunucusunu başlatın:**
 ```bash
 python manage.py runserver
 ```
 
-2. Tarayıcıda şu adrese git: http://127.0.0.1:8000/
+8. **Tarayıcıda açın:** http://127.0.0.1:8000/
 
-## Web Sitesi Özellikleri
+## 📁 Proje Yapısı
 
-Requirements.txt dosyasında aşağıdaki özellikler için paketler bulunmaktadır:
+```
+2MPROJE/
+├── myproject/              # Ana proje ayarları
+│   ├── settings.py         # Django ayarları
+│   ├── urls.py            # Ana URL konfigürasyonu
+│   └── wsgi.py            # WSGI konfigürasyonu
+├── website/               # Ana uygulama
+│   ├── models.py          # Veri modelleri
+│   ├── views.py           # View fonksiyonları
+│   ├── urls.py            # URL routing
+│   └── admin.py           # Admin konfigürasyonu
+├── templates/             # HTML şablonları
+│   ├── base.html          # Ana şablon
+│   ├── anasayfa.html      # Ana sayfa
+│   ├── urunler.html       # Ürünler sayfası
+│   ├── hakkimizda.html    # Hakkımızda sayfası
+│   ├── blog.html          # Blog sayfası
+│   └── iletisim.html      # İletişim sayfası
+├── static/               # Statik dosyalar
+│   ├── css/              # CSS dosyaları
+│   ├── js/               # JavaScript dosyaları
+│   └── images/           # Resim dosyaları
+├── media/                # Kullanıcı yüklediği dosyalar
+├── requirements.txt      # Python bağımlılıkları
+└── manage.py            # Django yönetim komutu
+```
 
-### 🔐 Kimlik Doğrulama ve Güvenlik
-- **django-allauth**: Sosyal medya girişi (Google, Facebook, GitHub vb.)
-- **djangorestframework-simplejwt**: JWT token tabanlı API kimlik doğrulama
+## 🎨 Tasarım ve Renkler
 
-### 🎨 Kullanıcı Arayüzü
-- **django-crispy-forms** + **crispy-bootstrap5**: Güzel form tasarımları
-- **django-bootstrap5**: Bootstrap 5 entegrasyonu
-- **django-widget-tweaks**: Form widget özelleştirme
+- **Ana Renk Paleti:**
+  - Koyu Yeşil: `#0A2815`
+  - Altın: `#D4AF37`
+  - Açık Mavi: `#F0FFFF` (Arka plan)
+  - Beyaz: `#FFFFFF`
 
-### 📷 Medya ve Dosya Yönetimi
-- **Pillow**: Resim işleme ve yeniden boyutlandırma
-- **django-storages**: Cloud storage (AWS S3 vb.) desteği
+- **Tipografi:** Modern sans-serif fontlar
+- **Responsive:** Bootstrap 5 tabanlı responsive tasarım
 
-### 🚀 API Geliştirme
-- **djangorestframework**: RESTful API oluşturma
-- **django-cors-headers**: Cross-Origin Resource Sharing
-- **django-filter**: API filtreleme
+## 🔧 Kullanılan Teknolojiler
 
-### ⚡ Performans ve Geliştirme
-- **django-debug-toolbar**: Geliştirme aracı
-- **django-extensions**: Ek Django komutları
-- **django-compressor**: CSS/JS sıkıştırma
+### Backend
+- **Django 5.2.1** - Web framework
+- **Django REST Framework** - API geliştirme
+- **Pillow** - Resim işleme
+- **SQLite** - Veritabanı (geliştirme)
 
-### 📊 İçerik Yönetimi
-- **django-admin-interface**: Gelişmiş admin paneli
-- **django-import-export**: Veri içe/dışa aktarma
-- **django-mptt**: Ağaç yapısında veriler
-- **django-taggit**: Etiketleme sistemi
+### Frontend
+- **HTML5** - Markup
+- **CSS3** - Stil
+- **Bootstrap 5** - CSS framework
+- **JavaScript** - İnteraktivite
+- **jQuery** - DOM manipülasyonu
 
-### 📧 E-posta ve Arka Plan İşleri
-- **celery**: Arka plan görevleri
-- **redis**: Message broker
+### Güvenlik ve Performans
+- **django-allauth** - Kimlik doğrulama
+- **django-cors-headers** - CORS desteği
+- **django-compressor** - CSS/JS sıkıştırma
+- **whitenoise** - Statik dosya sunumu
 
-### 🔍 SEO ve Meta
-- **django-meta**: Meta tag yönetimi
+## 📱 Sayfalar
 
-### 🚀 Production
-- **gunicorn**: WSGI server
-- **whitenoise**: Statik dosya sunumu
+1. **Ana Sayfa** (`/`) - Hero slider, özellikler, referanslar
+2. **Ürünler** (`/urunler/`) - Ürün kataloğu ve filtreler
+3. **Hakkımızda** (`/hakkimizda/`) - Şirket bilgileri ve istatistikler
+4. **Blog** (`/blog/`) - Blog yazıları ve pagination
+5. **İletişim** (`/iletisim/`) - İletişim formu ve harita
 
-## Proje Yapısı
+## 🔑 Admin Paneli
 
-- `myproject/` - Django proje ayarları
-- `manage.py` - Django yönetim komutları için araç
-- `venv/` - Python virtual environment
-- `requirements.txt` - Tüm bağımlılık listesi
+Admin paneline erişim: http://127.0.0.1:8000/admin/
 
-## Yararlı Komutlar
+Süper kullanıcı oluşturduktan sonra:
+- İçerik yönetimi
+- Kullanıcı yönetimi
+- Medya dosya yönetimi
+- Site ayarları
 
-- Yeni uygulama oluştur: `python manage.py startapp appname`
-- Süper kullanıcı oluştur: `python manage.py createsuperuser`
-- Migration oluştur: `python manage.py makemigrations`
-- Migration'ları uygula: `python manage.py migrate`
-- Statik dosyaları topla: `python manage.py collectstatic`
+## 🌐 API Endpoints
 
-## Gelişmiş Özellikler
+- `/api/` - Ana API endpoint
+- API dokümantasyonu geliştirme aşamasında
 
-1. **API Endpoints**: `/api/` URL'lerinde RESTful API
-2. **Admin Panel**: `/admin/` gelişmiş yönetim paneli
-3. **Kullanıcı Kayıt/Giriş**: Sosyal medya entegrasyonu
-4. **Dosya Yükleme**: Resim ve dosya yönetimi
-5. **Etiketleme**: İçerik etiketleme sistemi
-6. **Tree Structure**: Hiyerarşik veri yapıları
+## 📞 İletişim ve Destek
 
-## Sonraki Adımlar
+Proje ile ilgili sorularınız için:
+- GitHub Issues bölümünü kullanın
+- Pull request'lerinizi memnuniyetle karşılarız
 
-1. Paketleri kullanmak için `settings.py`'a ekleyin
-2. URL konfigürasyonlarını yapın
-3. Template'ler ve static dosyalar oluşturun
-4. API endpoint'leri tanımlayın
-5. Celery konfigürasyonu yapın (opsiyonel) 
+## 📄 Lisans
+
+Bu proje MIT lisansı altında lisanslanmıştır.
+
+## 🤝 Katkıda Bulunma
+
+1. Projeyi fork edin
+2. Feature branch oluşturun (`git checkout -b feature/AmazingFeature`)
+3. Değişikliklerinizi commit edin (`git commit -m 'Add some AmazingFeature'`)
+4. Branch'inizi push edin (`git push origin feature/AmazingFeature`)
+5. Pull Request oluşturun
+
+## 📝 Changelog
+
+### v1.0.0 (2024)
+- İlk sürüm
+- Temel sayfa yapıları
+- Responsive tasarım
+- Admin paneli entegrasyonu
+
+---
+
+⭐ Bu projeyi beğendiyseniz star vermeyi unutmayın! 

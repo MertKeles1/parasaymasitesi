@@ -53,6 +53,6 @@ python-dateutil==2.9.0
 # Additional useful packages
 django-widget-tweaks==1.5.0  # Form widget styling
 django-bootstrap5==24.2       # Bootstrap integration
-django-compressor==4.5.1     # CSS/JS compression
+# django-compressor==4.5.1   # CSS/JS compression - DISABLED due to Railway deployment issue
 django-mptt==0.16.0           # Tree structures
 django-taggit==6.1.0          # Tagging system 
