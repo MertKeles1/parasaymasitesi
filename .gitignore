@@ -123,14 +123,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Django specific
-media/
-staticfiles/
-static/
-!static/css/
-!static/js/
-!static/images/
-
 # IDE
 .vscode/
 .idea/
