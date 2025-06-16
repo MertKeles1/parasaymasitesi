@@ -26,6 +26,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-86suc#mt_z*)#&@zcs!9(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
+<<<<<<< HEAD
 # Railway specific ALLOWED_HOSTS
 ALLOWED_HOSTS = [
     'web-production-6e57c.up.railway.app',
@@ -40,6 +41,21 @@ ALLOWED_HOSTS = [
 # Parse ALLOWED_HOSTS from environment variable if provided
 if os.environ.get('ALLOWED_HOSTS'):
     ALLOWED_HOSTS.extend(os.environ.get('ALLOWED_HOSTS').split(','))
+=======
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+CSRF_COOKIE_SECURE = False
+
+# Add production hosts
+if not DEBUG:
+    ALLOWED_HOSTS.extend([
+        '.railway.app',
+        'parasaymasitesi-production.up.railway.app',
+        '.render.com', 
+        '.herokuapp.com',
+        '.pythonanywhere.com',
+        '.vercel.app'
+    ])
+>>>>>>> 9b34f493f6db2c26a54cfd68e5bb10b758aad4bf
 
 
 # Application definition
@@ -152,6 +168,17 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://parasaymasitesi-production.up.railway.app',
+    'http://parasaymasitesi-production.up.railway.app',
+]
+
+SESSION_COOKIE_SECURE = True  # HTTPS için
+CSRF_COOKIE_SECURE = True     # HTTPS için
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'Lax'
+    
 
 # Security settings for production
 if not DEBUG:
