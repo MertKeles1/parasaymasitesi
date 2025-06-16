@@ -29,6 +29,7 @@ DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 # Railway specific ALLOWED_HOSTS
 ALLOWED_HOSTS = [
     'web-production-6e57c.up.railway.app',
+    'parasaymasitesi-production.up.railway.app',
     '*.railway.app',
     '*.up.railway.app',
     'localhost',
@@ -180,3 +181,8 @@ if not DEBUG:
             'handlers': ['console'],
         },
     }
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://parasaymasitesi-production.up.railway.app',
+    'http://parasaymasitesi-production.up.railway.app',
+]

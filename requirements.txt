@@ -56,3 +56,6 @@ django-bootstrap5==24.2       # Bootstrap integration
 # django-compressor==4.5.1   # CSS/JS compression - DISABLED due to Railway deployment issue
 django-mptt==0.16.0           # Tree structures
 django-taggit==6.1.0          # Tagging system 
+
+dj-database-url
+psycopg2-binary
