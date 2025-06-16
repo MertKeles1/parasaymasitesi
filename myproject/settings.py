@@ -11,7 +11,10 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-86suc#mt_z*)#&@zcs!9(
 
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['parasaymasitesi.onrender.com',
+    'localhost',
+    '127.0.0.1',
+    ]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
