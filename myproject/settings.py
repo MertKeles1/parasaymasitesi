@@ -33,6 +33,7 @@ CSRF_COOKIE_SECURE = False
 if not DEBUG:
     ALLOWED_HOSTS.extend([
         '.railway.app',
+        'parasaymasitesi-production.up.railway.app',
         '.render.com', 
         '.herokuapp.com',
         '.pythonanywhere.com',
