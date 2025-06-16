@@ -10,8 +10,8 @@
     <div class="container">
         <div class="about-content">
             <div class="about-image">
-                {% if about_page.company_image %}
-                    <img src="{{ about_page.company_image.url }}" alt="Şirket Hikayesi">
+                {% if about_page.story_image %}
+                    <img src="{{ about_page.story_image.url }}" alt="Şirket Hikayesi">
                 {% else %}
                     <div class="placeholder-image">
                         <i class="fas fa-building"></i>
@@ -19,9 +19,33 @@
                 {% endif %}
             </div>
             <div class="about-text">
+                <h2>{{ about_page.story_title|default:"Hikayemiz" }}</h2>
+                <div class="story-content">
+                    {{ about_page.story_content|safe }}
+                </div>
+                <div class="action-buttons">
+                    <a href="{% url 'website:urunler' %}" class="btn primary">Ürünlerimizi Keşfedin</a>
+                    <a href="{% url 'website:iletisim' %}" class="btn secondary">İletişime Geçin</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% else %}
+<!-- Varsayılan içerik eğer about_page yoksa -->
+<section class="about-story">
+    <div class="container">
+        <div class="about-content">
+            <div class="about-image">
+                <div class="placeholder-image">
+                    <i class="fas fa-building"></i>
+                </div>
+            </div>
+            <div class="about-text">
                 <h2>Hikayemiz</h2>
                 <div class="story-content">
-                    {{ about_page.company_story|safe }}
+                    <p>2M Para Sayma Cihazları olarak, para sayma teknolojileri alanında uzun yıllardır hizmet vermekteyiz. Müşterilerimizin ihtiyaçlarını en iyi şekilde karşılamak için sürekli gelişen teknolojileri takip ediyor ve kaliteli ürünler sunuyoruz.</p>
+                    <p>Deneyimli ekibimiz ve güvenilir ürünlerimizle, işletmenizin para sayma ihtiyaçlarına en uygun çözümleri sunmaya devam ediyoruz.</p>
                 </div>
                 <div class="action-buttons">
                     <a href="{% url 'website:urunler' %}" class="btn primary">Ürünlerimizi Keşfedin</a>
