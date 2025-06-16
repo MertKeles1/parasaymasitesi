@@ -151,6 +151,17 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://parasaymasitesi-production.up.railway.app',
+    'http://parasaymasitesi-production.up.railway.app',
+]
+
+SESSION_COOKIE_SECURE = True  # HTTPS için
+CSRF_COOKIE_SECURE = True     # HTTPS için
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'Lax'
+    
+
 # Security settings for production
 if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
